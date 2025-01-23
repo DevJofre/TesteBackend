@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  mssql:
+    container_name: teste-backend
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    volumes:
+      - ./data:/initdb
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Achei@102030"
+    ports:
+      - 1433:1433
