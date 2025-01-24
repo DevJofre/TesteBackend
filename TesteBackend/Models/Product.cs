@@ -11,5 +11,5 @@ public class Product
     /* relations */
     public Category? Category { get; set; }
     [JsonIgnore]
-    public int CategoryId { get; set; }
+    public int? CategoryId { get; set; }
 }

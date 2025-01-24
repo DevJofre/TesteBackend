@@ -13,7 +13,10 @@ internal sealed class ProductConfiguration: IEntityTypeConfiguration<Product>
         builder.Property(pt => pt.Name).HasMaxLength(100);
         
         /* relations */
-        builder.HasOne(p => p.Category).WithMany(c => c.Products);
+        builder.HasOne(p => p.Category)
+            .WithMany(c => c.Products)
+            .HasForeignKey(pt => pt.CategoryId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         /* seed de valores */
         builder.HasData(
