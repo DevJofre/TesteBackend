@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using TesteBackend.Model;
+using TesteBackend.Models;
 
 namespace TesteBackend.Services;
 

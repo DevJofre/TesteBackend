@@ -1,4 +1,4 @@
-namespace TesteBackend.Model;
+namespace TesteBackend.Models;
 
 public class Product
 {
