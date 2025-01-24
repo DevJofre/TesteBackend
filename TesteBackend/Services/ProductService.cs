@@ -9,4 +9,9 @@ public class ProductService(TestDbContext context)
     {
         return context.Products.ToList().OrderBy(p => p.DateCreated);
     }
+
+    public Product? GetById(int id)
+    {
+        return context.Products.Find(id);
+    }
 }
