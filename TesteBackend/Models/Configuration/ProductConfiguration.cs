@@ -14,9 +14,9 @@ internal sealed class ProductConfiguration: IEntityTypeConfiguration<Product>
 
         /* seed de valores */
         builder.HasData(
-            new Product() { Id = 1, Name = "IPhone X", Date = DateTime.Parse("2025-01-02")},
-            new Product() { Id = 2, Name = "IPhone IX", Date = DateTime.Parse("2025-01-01")},
-            new Product() { Id = 3, Name = "IPhone XI", Date = DateTime.Parse("2025-01-03")}
+            new Product() { Id = 1, Name = "IPhone X", DateCreated = DateTime.Parse("2025-01-02")},
+            new Product() { Id = 2, Name = "IPhone IX", DateCreated = DateTime.Parse("2025-01-01")},
+            new Product() { Id = 3, Name = "IPhone XI", DateCreated = DateTime.Parse("2025-01-03")}
         );
     }
 }

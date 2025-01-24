@@ -7,6 +7,6 @@ public class ProductService(TestDbContext context)
 {
     public IEnumerable<Product> GetAll()
     {
-        return context.Products.ToList().OrderBy(p => p.Date);
+        return context.Products.ToList().OrderBy(p => p.DateCreated);
     }
 }
