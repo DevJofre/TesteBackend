@@ -3,16 +3,10 @@ using TesteBackend.Models;
 
 namespace TesteBackend.Services;
 
-public class ProductService
+public class ProductService(TestDbContext context)
 {
     public IEnumerable<Product> GetAll()
     {
-        return Enumerable.Range(1, 5).Select(index => new Product
-            {
-                Id = index,
-                Date = DateTime.Now.AddDays(index),
-                Name = $"Product {index}",
-            })
-            .ToArray();
+        return context.Products.ToList().OrderBy(p => p.Date);
     }
 }
