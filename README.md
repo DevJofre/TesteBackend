@@ -19,7 +19,7 @@
 - **CRUD:** Não precisa ser completo, apenas funções que achar mais releveantes
 - **Remoção:** Ao apagar uma categoria, os produtos relacionados não devem ser apagados, apenas devem 
 ser atualizados pra ficar sem categoria, ao apagar um produto os atributos relacionados 
-devem ser apagados (opção OnDelete)
+devem ser apagados (opção OnDelete) porém as categorias não devem ser apagadas.
 
 
 ## **Relacionamento de tabelas:**
