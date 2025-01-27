@@ -6,6 +6,7 @@ namespace TesteBackend;
 public class TestDbContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<Product> Products { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
