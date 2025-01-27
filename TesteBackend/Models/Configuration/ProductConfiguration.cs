@@ -15,8 +15,7 @@ internal sealed class ProductConfiguration: IEntityTypeConfiguration<Product>
         /* relations */
         builder.HasOne(p => p.Category)
             .WithMany(c => c.Products)
-            .HasForeignKey(pt => pt.CategoryId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .HasForeignKey(pt => pt.CategoryId);
 
         /* seed de valores */
         builder.HasData(
