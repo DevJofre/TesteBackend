@@ -11,7 +11,9 @@
 
 ## Funcionalidades Principais
 
-**CRUD de Produtos, Marcas e Atributos ( Listagens ).**
+- **CRUD de Produtos, Categoria e Atributos ( Listagens ).**
+- **Quando apagar Produtos não pode apagar as Categorias mas deve apagar os Atributos relacionados a ele.**
+- **Quando apagar Categoria não pode apagar os Produtos relacionados a Categoria.**
 
 
 ## Requisitos de Desenvolvimento
@@ -26,7 +28,7 @@
 
 ## **Relacionamento de tabelas:**
 
-- Produto deve ter 1 Marca e 5 Atributos.
+- Produto deve ter 1 Categoria e 5 Atributos.
 - Seguir a configuração inicial do projeto e criar migrations conforme a 
 necessidade para que quando for gerado o comando de docker compose up para 
 subir os container e suba elas para um banco de teste.
