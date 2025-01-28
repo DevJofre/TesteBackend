@@ -27,6 +27,7 @@ devem ser apagados (opção OnDelete) porém as categorias não devem ser apagad
 - Produto deve ter 1 Categoria e alguns Atributos (com nome e valor).
 - Seguir a configuração inicial do projeto e criar migrations conforme a 
 necessidade para ter a informação do banco salva e facilitar revisão do teste
+OBS: caso prefira não usar docker, mandar também um dump do banco de dados usado
 
 ## Docker
 Para facilitar criação/remoção de bancos de dados pra teste, um banco normal pode ser usado também.
