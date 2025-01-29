@@ -40,4 +40,26 @@ public class CategoryController(CategoryService categoryService) : ControllerBas
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpDelete("{id}", Name = "DeleteCategory")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult Delete(int id)
+    {
+        var category = categoryService.GetById(id);
+        if (category == null)
+        {
+            return NotFound($"Category {id} not found");
+        }
+
+        try
+        {
+            categoryService.Delete(id);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }
