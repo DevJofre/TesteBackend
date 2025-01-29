@@ -7,7 +7,8 @@ public class Product
     public int Id { get; set; }
     public DateTime DateCreated { get; set; }
     public required string Name { get; set; }
-    
+    public float Price { get; set; }
+
     /* relations */
     public Category? Category { get; set; }
     [JsonIgnore]
