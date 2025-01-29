@@ -62,4 +62,22 @@ public class CategoryController(CategoryService categoryService) : ControllerBas
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpPatch("{id}", Name = "PatchCategory")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult Patch(int id, [FromBody] PatchCategory patchCategory)
+    {
+        try
+        {
+            categoryService.Update(id, patchCategory);
+            return Ok($"Category {id} updated successfully");
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
 }

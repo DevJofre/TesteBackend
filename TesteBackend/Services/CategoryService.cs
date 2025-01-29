@@ -49,4 +49,21 @@ public class CategoryService
             throw new Exception($"Category with ID {id} not found");
         }
     }
+
+    public void Update(int id, PatchCategory patchCategory)
+    {
+        var category = _context.Categories.Find(id);
+        if (category == null)
+        {
+            throw new Exception($"Category with ID {id} not found");
+        }
+
+        // Atualiza apenas os campos fornecidos no PATCH
+        if (!string.IsNullOrEmpty(patchCategory.Name))
+        {
+            category.Name = patchCategory.Name;
+        }
+
+        _context.SaveChanges();
+    }
 }
