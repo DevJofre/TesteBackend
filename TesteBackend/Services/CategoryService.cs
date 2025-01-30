@@ -38,27 +38,24 @@ public class CategoryService
 
     public void Delete(int id)
     {
-        var category = _context.Categories.Find(id);
-        if (category != null)
+        var category = _context.Categories.Find(id) ?? throw new Exception("Category not found");
+        var productsWithCategory = _context.Products.Where(p => p.CategoryId == id).ToList();
+
+        foreach (var product in productsWithCategory)
         {
-            _context.Categories.Remove(category);
-            _context.SaveChanges();
+            product.CategoryId = null;
         }
-        else
-        {
-            throw new Exception($"Category with ID {id} not found");
-        }
+
+        _context.SaveChanges();
+
+        _context.Categories.Remove(category);
+        _context.SaveChanges();
     }
+
 
     public void Update(int id, PatchCategory patchCategory)
     {
-        var category = _context.Categories.Find(id);
-        if (category == null)
-        {
-            throw new Exception($"Category with ID {id} not found");
-        }
-
-        // Atualiza apenas os campos fornecidos no PATCH
+        var category = _context.Categories.Find(id) ?? throw new Exception($"Category with ID {id} not found");
         if (!string.IsNullOrEmpty(patchCategory.Name))
         {
             category.Name = patchCategory.Name;
