@@ -63,4 +63,27 @@ public class ProductController(ProductService productService) : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpPatch("{id}", Name = "PatchProduct")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult Patch(int id, [FromBody] PatchProduct patchProduct)
+    {
+        try
+        {
+            var updatedProduct = productService.Update(id, patchProduct);
+
+            if (updatedProduct == null)
+            {
+                return NotFound($"Product {id} not found");
+            }
+
+            return Ok(updatedProduct);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }

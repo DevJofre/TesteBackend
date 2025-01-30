@@ -50,4 +50,25 @@ public class ProductService
         _context.SaveChanges();
     }
 
+    public Product? Update(int id, PatchProduct patchProduct)
+    {
+        var product = _context.Products.Find(id);
+
+        if (product == null)
+        {
+            return null;
+        }
+
+        if (patchProduct.Name != null)
+            product.Name = patchProduct.Name;
+
+        if (patchProduct.Price.HasValue)
+            product.Price = patchProduct.Price.Value;
+
+        if (patchProduct.CategoryId.HasValue)
+            product.CategoryId = patchProduct.CategoryId.Value;
+
+        _context.SaveChanges();
+        return product;
+    }
 }
