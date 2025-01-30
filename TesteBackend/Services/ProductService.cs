@@ -66,7 +66,16 @@ public class ProductService
             product.Price = patchProduct.Price.Value;
 
         if (patchProduct.CategoryId.HasValue)
+        {
+            var categoryExists = _context.Categories.Any(c => c.Id == patchProduct.CategoryId.Value);
+
+            if (!categoryExists)
+            {
+                throw new Exception($"Category with ID {patchProduct.CategoryId.Value} not found");
+            }
+
             product.CategoryId = patchProduct.CategoryId.Value;
+        }
 
         _context.SaveChanges();
         return product;
