@@ -37,4 +37,17 @@ public class ProductService
         _context.SaveChanges();
         return product;
     }
+
+    public void Delete(int id)
+    {
+        var product = _context.Products.Find(id);
+        if (product == null)
+        {
+            throw new Exception("Product not found");
+        }
+
+        _context.Products.Remove(product);
+        _context.SaveChanges();
+    }
+
 }

@@ -41,4 +41,26 @@ public class ProductController(ProductService productService) : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpDelete("{id}", Name = "DeleteProduct")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult Delete(int id)
+    {
+        var product = productService.GetById(id);
+        if (product == null)
+        {
+            return NotFound($"Product {id} not found");
+        }
+
+        try
+        {
+            productService.Delete(id);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }
