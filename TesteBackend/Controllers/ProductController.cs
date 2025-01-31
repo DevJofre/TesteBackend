@@ -8,7 +8,7 @@ namespace TesteBackend.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ProductController(ProductService productService) : ControllerBase
+public class ProductController(ProductService productService, AttributeService attributeService) : ControllerBase
 {
     [HttpGet(Name = "GetProducts")]
     public IEnumerable<Product> Get()
@@ -80,6 +80,31 @@ public class ProductController(ProductService productService) : ControllerBase
             }
 
             return Ok(updatedProduct);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPatch("attributes/{id}", Name = "AddAttributesToProduct")]
+    [ProducesResponseType<Product>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult AddAttributes(int id, [FromBody] PostAttribute addAttributes)
+    {
+        try
+        {
+            var product = productService.GetById(id);
+
+            if (product == null)
+            {
+                return NotFound($"Product {id} not found");
+            }
+
+            var foundedAttributes = attributeService.GetByIds(addAttributes.AttributeIds);
+            productService.SaveManyAttributeProduct(id, addAttributes.AttributeIds);
+            return NoContent();
         }
         catch (Exception ex)
         {

@@ -33,6 +33,7 @@ builder.Services.AddDbContextPool<TestDbContext>(b =>
 /* Adicionando dependências de serviçoes */
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CategoryService>();
+builder.Services.AddScoped<AttributeService>();
 
 var app = builder.Build();
 

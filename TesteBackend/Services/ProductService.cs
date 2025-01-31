@@ -80,4 +80,25 @@ public class ProductService
         _context.SaveChanges();
         return product;
     }
+
+    public void SaveManyAttributeProduct(int productId, List<int> attributeIds)
+    {
+        List<ProductAttribute> buildedProductAttributes = new List<ProductAttribute>();
+
+        foreach (var attributeId in attributeIds)
+        {
+            var buildAttribute = new ProductAttribute
+            {
+                AttributesId = attributeId,
+                ProductId = productId
+            };
+
+
+            buildedProductAttributes.Add(buildAttribute);
+        }
+
+        _context.ProductAttributes.AddRange(buildedProductAttributes);
+
+        _context.SaveChanges();
+    }
 }
