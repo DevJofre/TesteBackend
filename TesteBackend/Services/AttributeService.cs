@@ -63,5 +63,13 @@ namespace TesteBackend.Services
                            .OrderBy(a => a.DateCreated)
                            .ToList();
         }
+
+        public IEnumerable<AttributeModel> GetByProductId(int productId)
+        {
+            return _context.ProductAttributes
+                            .Where(pa => pa.ProductId == productId && pa.Attribute != null)
+                            .Select(pa => pa.Attribute)
+                            .ToList();
+        }
     }
 }

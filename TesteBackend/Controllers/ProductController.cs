@@ -22,8 +22,18 @@ public class ProductController(ProductService productService, AttributeService a
     public IActionResult Get(int id)
     {
         var product = productService.GetById(id);
-        return product is null ? NotFound($"Product {id} not found") : Ok(product);
+        if (product is null)
+        {
+            return NotFound($"Product {id} not found");
+        }
+
+        // ✅ Chamando o método GetByProductId do AttributeService para carregar os atributos
+        var attributes = attributeService.GetByProductId(id);
+        product.Attributes = attributes.ToList();
+
+        return Ok(product);
     }
+
 
     [HttpPost(Name = "PostProduct")]
     [ProducesResponseType(StatusCodes.Status201Created)]
