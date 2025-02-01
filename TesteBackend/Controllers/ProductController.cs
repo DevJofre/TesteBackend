@@ -27,9 +27,8 @@ public class ProductController(ProductService productService, AttributeService a
             return NotFound($"Product {id} not found");
         }
 
-        // ✅ Chamando o método GetByProductId do AttributeService para carregar os atributos
-        var attributes = attributeService.GetByProductId(id);
-        product.Attributes = attributes.ToList();
+        var attributes = attributeService.GetAttributesByProductId(id);
+        product.Attributes = [.. attributes];
 
         return Ok(product);
     }

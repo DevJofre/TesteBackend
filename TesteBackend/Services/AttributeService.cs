@@ -64,12 +64,11 @@ namespace TesteBackend.Services
                            .ToList();
         }
 
-        public IEnumerable<AttributeModel> GetByProductId(int productId)
+        public List<AttributeModel?> GetAttributesByProductId(int productId)
         {
-            return _context.ProductAttributes
+            return [.. _context.ProductAttributes
                             .Where(pa => pa.ProductId == productId && pa.Attribute != null)
-                            .Select(pa => pa.Attribute)
-                            .ToList();
+                            .Select(pa => pa.Attribute)];
         }
     }
 }
