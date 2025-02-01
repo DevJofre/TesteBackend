@@ -34,6 +34,7 @@ builder.Services.AddDbContextPool<TestDbContext>(b =>
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<AttributeService>();
+builder.Services.AddSingleton<LoggerService>();
 
 var app = builder.Build();
 

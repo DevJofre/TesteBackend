@@ -7,11 +7,14 @@ namespace TesteBackend.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class CategoryController(CategoryService categoryService) : ControllerBase
+public class CategoryController(
+    CategoryService categoryService,
+    LoggerService loggerService) : ControllerBase
 {
     [HttpGet(Name = "GetCategories")]
     public IEnumerable<Category> Get()
     {
+        loggerService.LogInformation("Endpoint GetCaategory foi chamado.");
         return categoryService.GetAll();
     }
 
@@ -20,7 +23,11 @@ public class CategoryController(CategoryService categoryService) : ControllerBas
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Get(int id)
     {
+        loggerService.LogInformation($"Buscando categoria com ID: {id}");
+
         var category = categoryService.GetById(id);
+
+        loggerService.LogWarning($"Categoria com ID {id} não encontrado.");
         return category is null ? NotFound($"Category {id} not found") : Ok(category);
     }
 
@@ -29,14 +36,18 @@ public class CategoryController(CategoryService categoryService) : ControllerBas
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Post([FromBody] PostCategory postCategory)
     {
+        loggerService.LogInformation("Endpoint PostProduct com Categoria foi chamado.");
         try
         {
             var category = categoryService.Create(postCategory);
             string uri = Url.Link("GetCategory", new { id = category.Id });
+
+            loggerService.LogInformation($"Categoria criado com sucesso. ID: {category.Id}");
             return Created(uri, category);
         }
         catch (Exception ex)
         {
+            loggerService.LogError($"Erro ao criar Categoria: {ex.Message}", ex);
             return BadRequest(ex.Message);
         }
     }
@@ -46,19 +57,23 @@ public class CategoryController(CategoryService categoryService) : ControllerBas
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Delete(int id)
     {
+        loggerService.LogInformation($"Tentando deletar categoria com ID: {id}");
         var category = categoryService.GetById(id);
         if (category == null)
         {
+            loggerService.LogWarning($"Categoria com ID {id} não encontrado para deletar.");
             return NotFound($"Category {id} not found");
         }
 
         try
         {
             categoryService.Delete(id);
+            loggerService.LogInformation($"Categoria com ID {id} deletado com sucesso.");
             return NoContent();
         }
         catch (Exception ex)
         {
+            loggerService.LogError($"Erro ao deletar categoria com ID {id}: {ex.Message}", ex);
             return BadRequest(ex.Message);
         }
     }
@@ -69,13 +84,16 @@ public class CategoryController(CategoryService categoryService) : ControllerBas
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Patch(int id, [FromBody] PatchCategory patchCategory)
     {
+        loggerService.LogInformation($"Tentando atualizar categoria com ID: {id}");
         try
         {
             categoryService.Update(id, patchCategory);
+            loggerService.LogInformation($"Categoria com ID {id} atualizado com sucesso.");
             return Ok($"Category {id} updated successfully");
         }
         catch (Exception ex)
         {
+            loggerService.LogError($"Erro ao atualizar catedoria com ID {id}: {ex.Message}", ex);
             return NotFound(ex.Message);
         }
     }
