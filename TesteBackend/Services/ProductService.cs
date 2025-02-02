@@ -7,24 +7,43 @@ namespace TesteBackend.Services;
 public class ProductService
 {
     private readonly TestDbContext _context;
+    private readonly LoggerService _loggerService;
 
-    public ProductService(TestDbContext context)
+    public ProductService(TestDbContext context, LoggerService loggerService)
     {
         _context = context;
+        _loggerService = loggerService;
     }
 
     public IEnumerable<Product> GetAll()
     {
-        return _context.Products.ToList();
+        _loggerService.LogInformation("Buscando todos os produtos.");
+        var products = _context.Products.ToList();
+        _loggerService.LogInformation($"Retornando {products.Count} produtos.");
+        return products;
     }
 
     public Product? GetById(int id)
     {
-        return _context.Products.FirstOrDefault(p => p.Id == id);
+        _loggerService.LogInformation($"Buscando produto com ID: {id}");
+        var product = _context.Products.FirstOrDefault(p => p.Id == id);
+
+        if (product == null)
+        {
+            _loggerService.LogWarning($"Produto com ID {id} não encontrado.");
+        }
+        else
+        {
+            _loggerService.LogInformation($"Produto com ID {id} encontrado.");
+        }
+
+        return product;
     }
 
     public Product Create(PostProduct postProduct)
     {
+        _loggerService.LogInformation("Criando novo produto.");
+
         var product = new Product()
         {
             Name = postProduct.Name,
@@ -35,27 +54,36 @@ public class ProductService
 
         _context.Products.Add(product);
         _context.SaveChanges();
+
+        _loggerService.LogInformation($"Produto criado com sucesso. ID: {product.Id}");
         return product;
     }
 
     public void Delete(int id)
     {
+        _loggerService.LogInformation($"Tentando deletar produto com ID: {id}");
         var product = _context.Products.Find(id);
+
         if (product == null)
         {
+            _loggerService.LogWarning($"Produto com ID {id} não encontrado para deletar.");
             throw new Exception("Product not found");
         }
 
         _context.Products.Remove(product);
         _context.SaveChanges();
+
+        _loggerService.LogInformation($"Produto com ID {id} deletado com sucesso.");
     }
 
     public Product? Update(int id, PatchProduct patchProduct)
     {
+        _loggerService.LogInformation($"Tentando atualizar produto com ID: {id}");
         var product = _context.Products.Find(id);
 
         if (product == null)
         {
+            _loggerService.LogWarning($"Produto com ID {id} não encontrado para atualizar.");
             return null;
         }
 
@@ -71,6 +99,7 @@ public class ProductService
 
             if (!categoryExists)
             {
+                _loggerService.LogError($"Categoria com ID {patchProduct.CategoryId.Value} não encontrada.");
                 throw new Exception($"Category with ID {patchProduct.CategoryId.Value} not found");
             }
 
@@ -78,11 +107,14 @@ public class ProductService
         }
 
         _context.SaveChanges();
+
+        _loggerService.LogInformation($"Produto com ID {id} atualizado com sucesso.");
         return product;
     }
 
     public void SaveManyAttributeProduct(int productId, List<int> attributeIds)
     {
+        _loggerService.LogInformation($"Tentando adicionar atributos ao produto com ID: {productId}");
         List<ProductAttribute> buildedProductAttributes = new List<ProductAttribute>();
 
         foreach (var attributeId in attributeIds)
@@ -93,12 +125,12 @@ public class ProductService
                 ProductId = productId
             };
 
-
             buildedProductAttributes.Add(buildAttribute);
         }
 
         _context.ProductAttributes.AddRange(buildedProductAttributes);
-
         _context.SaveChanges();
+
+        _loggerService.LogInformation($"Atributos adicionados ao produto com ID {productId} com sucesso.");
     }
 }
