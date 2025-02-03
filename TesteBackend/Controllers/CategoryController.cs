@@ -19,7 +19,7 @@ public class CategoryController(
     }
 
     [HttpGet("{id}", Name = "GetCategory")]
-    [ProducesResponseType<Product>(StatusCodes.Status200OK)]
+    [ProducesResponseType<Category>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Get(int id)
     {
@@ -94,7 +94,7 @@ public class CategoryController(
         catch (Exception ex)
         {
             loggerService.LogError($"Erro ao atualizar catedoria com ID {id}: {ex.Message}", ex);
-            return NotFound(ex.Message);
+            return BadRequest(ex.Message);
         }
     }
 

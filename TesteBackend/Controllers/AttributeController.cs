@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using TesteBackend.Services;
@@ -19,6 +20,7 @@ namespace TesteBackend.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<AttributeModel>> GetAll()
         {
             loggerService.LogInformation("Endpoint GetAll de Atributos foi chamado.");
@@ -28,6 +30,8 @@ namespace TesteBackend.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<AttributeModel> GetById(int id)
         {
             loggerService.LogInformation($"Buscando atributo com ID: {id}");
@@ -44,6 +48,8 @@ namespace TesteBackend.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<AttributeModel> Create(AttributeModel attribute)
         {
             loggerService.LogInformation("Endpoint Create de Atributo foi chamado.");
@@ -62,6 +68,9 @@ namespace TesteBackend.Controllers
         }
 
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Update(int id, AttributeModel updatedAttribute)
         {
             loggerService.LogInformation($"Tentando atualizar atributo com ID: {id}");
@@ -75,11 +84,14 @@ namespace TesteBackend.Controllers
             catch (Exception ex)
             {
                 loggerService.LogError($"Erro ao atualizar atributo com ID {id}: {ex.Message}", ex);
-                return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Delete(int id)
         {
             loggerService.LogInformation($"Tentando deletar atributo com ID: {id}");
@@ -93,7 +105,7 @@ namespace TesteBackend.Controllers
             catch (Exception ex)
             {
                 loggerService.LogError($"Erro ao deletar atributo com ID {id}: {ex.Message}", ex);
-                return NotFound(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
     }
