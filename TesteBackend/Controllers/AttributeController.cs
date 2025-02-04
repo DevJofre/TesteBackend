@@ -99,10 +99,7 @@ namespace TesteBackend.Controllers
                 {
                     attribute.Color = patchDoc.Color;
                 }
-                if (patchDoc.Origem != null)
-                {
-                    attribute.Origem = patchDoc.Origem.Value;
-                }
+                attribute.Origem = patchDoc.Origem;
 
                 if (!TryValidateModel(attribute))
                 {

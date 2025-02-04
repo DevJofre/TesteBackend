@@ -1,6 +1,11 @@
-namespace TesteBackend.DTOs;
+using System.ComponentModel.DataAnnotations;
 
-public class PatchCategory
+namespace TesteBackend.DTOs
 {
-    public string? Name { get; set; }
+    public class PatchCategory
+    {
+        [Required(ErrorMessage = "O nome da categoria é obrigatório.")]
+        [StringLength(100, ErrorMessage = "O nome da categoria deve ter no máximo 100 caracteres.")]
+        public string? Name { get; set; }
+    }
 }
