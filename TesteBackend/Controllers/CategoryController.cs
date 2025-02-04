@@ -36,21 +36,36 @@ public class CategoryController(
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Post([FromBody] PostCategory postCategory)
     {
-        loggerService.LogInformation("Endpoint PostProduct com Categoria foi chamado.");
+        loggerService.LogInformation("Endpoint PostCategory foi chamado.");
+
         try
         {
-            var category = categoryService.Create(postCategory);
-            string uri = Url.Link("GetCategory", new { id = category.Id });
+            Category? category = categoryService.Create(postCategory);
 
-            loggerService.LogInformation($"Categoria criado com sucesso. ID: {category.Id}");
+            if (category == null)
+            {
+                loggerService.LogError("Erro ao criar categoria: retorno nulo do serviço.");
+                return BadRequest("Erro ao criar categoria.");
+            }
+
+            string uri = Url.Link("GetCategory", new { id = category.Id }) ?? string.Empty;
+
+            if (string.IsNullOrEmpty(uri))
+            {
+                loggerService.LogError("Erro ao gerar a URL da categoria.");
+                return BadRequest("Erro ao gerar a URL da categoria.");
+            }
+
+            loggerService.LogInformation($"Categoria criada com sucesso. ID: {category.Id}");
             return Created(uri, category);
         }
         catch (Exception ex)
         {
-            loggerService.LogError($"Erro ao criar Categoria: {ex.Message}", ex);
+            loggerService.LogError($"Erro ao criar categoria: {ex.Message}", ex);
             return BadRequest(ex.Message);
         }
     }
+
 
     [HttpDelete("{id}", Name = "DeleteCategory")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

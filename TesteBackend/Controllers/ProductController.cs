@@ -50,8 +50,21 @@ public class ProductController(
 
         try
         {
-            var product = productService.Create(postProduct);
-            string uri = Url.Link("GetProduct", new { id = product.Id });
+            Product? product = productService.Create(postProduct);
+
+            if (product == null)
+            {
+                loggerService.LogError("Erro ao criar produto: retorno nulo do serviço.");
+                return BadRequest("Erro ao criar produto.");
+            }
+
+            string uri = Url.Link("GetProduct", new { id = product.Id }) ?? string.Empty;
+
+            if (string.IsNullOrEmpty(uri))
+            {
+                loggerService.LogError("Erro ao gerar a URL do produto.");
+                return BadRequest("Erro ao gerar a URL do produto.");
+            }
 
             loggerService.LogInformation($"Produto criado com sucesso. ID: {product.Id}");
             return Created(uri, product);
@@ -59,9 +72,10 @@ public class ProductController(
         catch (Exception ex)
         {
             loggerService.LogError($"Erro ao criar produto: {ex.Message}", ex);
-            return BadRequest(ex.Message);
+            return NotFound(ex.Message);
         }
     }
+
 
     [HttpDelete("{id}", Name = "DeleteProduct")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
