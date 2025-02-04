@@ -62,12 +62,20 @@ public class ProductService
     public void Delete(int id)
     {
         _loggerService.LogInformation($"Tentando deletar produto com ID: {id}");
-        var product = _context.Products.Find(id);
 
+        var product = _context.Products.Find(id);
         if (product == null)
         {
             _loggerService.LogWarning($"Produto com ID {id} não encontrado para deletar.");
             throw new Exception("Product not found");
+        }
+
+        // Remover registros relacionados na tabela ProductAttribute
+        var relatedAttributes = _context.ProductAttributes.Where(pa => pa.ProductId == id).ToList();
+        if (relatedAttributes.Any())
+        {
+            _context.ProductAttributes.RemoveRange(relatedAttributes);
+            _context.SaveChanges();
         }
 
         _context.Products.Remove(product);
@@ -75,6 +83,7 @@ public class ProductService
 
         _loggerService.LogInformation($"Produto com ID {id} deletado com sucesso.");
     }
+
 
     public Product? Update(int id, PatchProduct patchProduct)
     {
