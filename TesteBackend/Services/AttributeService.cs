@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http.Connections;
+using TesteBackend.DTOs;
 using AttributeModel = TesteBackend.Models.Attribute;
 
 namespace TesteBackend.Services
@@ -38,16 +40,22 @@ namespace TesteBackend.Services
             return attribute;
         }
 
-        public AttributeModel Create(AttributeModel attribute)
+        public AttributeModel Create(PostAttribute attribute)
         {
             loggerService.LogInformation("Criando novo atributo.");
 
-            attribute.DateCreated = DateTime.UtcNow;
-            _context.Attributes.Add(attribute);
+            var attributeModel = new AttributeModel()
+            {
+                Brand = attribute.Brand,
+                Color = attribute.Color,
+                Origem = attribute.Origem
+            };
+
+            _context.Attributes.Add(attributeModel);
             _context.SaveChanges();
 
-            loggerService.LogInformation($"Atributo criado com sucesso. ID: {attribute.Id}");
-            return attribute;
+            loggerService.LogInformation($"Atributo criado com sucesso. ID: {attributeModel.Id}");
+            return attributeModel;
         }
 
         public void Delete(int id)

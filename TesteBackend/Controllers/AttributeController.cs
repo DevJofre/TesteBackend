@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using TesteBackend.DTOs;
 using TesteBackend.Services;
 using AttributeModel = TesteBackend.Models.Attribute;
 
@@ -50,7 +51,7 @@ namespace TesteBackend.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<AttributeModel> Create(AttributeModel attribute)
+        public IActionResult Create([FromBody] PostAttribute attribute)
         {
             loggerService.LogInformation("Endpoint Create de Atributo foi chamado.");
 
@@ -67,23 +68,55 @@ namespace TesteBackend.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Update(int id, AttributeModel updatedAttribute)
+        public IActionResult Patch(int id, [FromBody] PatchAttribute patchDoc)
         {
-            loggerService.LogInformation($"Tentando atualizar atributo com ID: {id}");
+            loggerService.LogInformation($"Tentando atualizar parcialmente o atributo com ID: {id}");
+
+            if (patchDoc == null)
+            {
+                loggerService.LogWarning("O documento de patch recebido é nulo.");
+                return BadRequest("O documento de patch não pode ser nulo.");
+            }
+
+            var attribute = _attributeService.GetById(id);
+            if (attribute == null)
+            {
+                loggerService.LogWarning($"Atributo com ID {id} não encontrado.");
+                return NotFound();
+            }
 
             try
             {
-                _attributeService.Update(id, updatedAttribute);
-                loggerService.LogInformation($"Atributo com ID {id} atualizado com sucesso.");
+                if (patchDoc.Brand != null)
+                {
+                    attribute.Brand = patchDoc.Brand;
+                }
+                if (patchDoc.Color != null)
+                {
+                    attribute.Color = patchDoc.Color;
+                }
+                if (patchDoc.Origem != null)
+                {
+                    attribute.Origem = patchDoc.Origem.Value;
+                }
+
+                if (!TryValidateModel(attribute))
+                {
+                    loggerService.LogWarning("Modelo inválido após a aplicação do patch.");
+                    return BadRequest(ModelState);
+                }
+
+                _attributeService.Update(id, attribute);
+                loggerService.LogInformation($"Atributo com ID {id} atualizado parcialmente com sucesso.");
                 return NoContent();
             }
             catch (Exception ex)
             {
-                loggerService.LogError($"Erro ao atualizar atributo com ID {id}: {ex.Message}", ex);
+                loggerService.LogError($"Erro ao atualizar parcialmente o atributo com ID {id}: {ex.Message}", ex);
                 return BadRequest(ex.Message);
             }
         }

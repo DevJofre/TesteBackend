@@ -122,7 +122,7 @@ public class ProductController(
     [ProducesResponseType<Product>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public IActionResult AddAttributes(int id, [FromBody] PostAttribute addAttributes)
+    public IActionResult AddAttributes(int id, [FromBody] PostProductAttribute addAttributes)
     {
         loggerService.LogInformation($"Tentando adicionar atributos ao produto com ID: {id}");
 

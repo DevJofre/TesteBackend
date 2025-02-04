@@ -36,6 +36,7 @@ builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<AttributeService>();
 builder.Services.AddSingleton<LoggerService>();
 
+
 var app = builder.Build();
 
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
